@@ -5,6 +5,8 @@
 #include "Github_P_F_W.h"
 
 
+
+
 #define MAX_LOADSTRING 100
 
 // Глобальные переменные:
@@ -12,6 +14,8 @@ HINSTANCE hInst;                                // текущий экземпл
 const TCHAR szTitle[MAX_LOADSTRING] = _T("Lab_1");                  // Текст строки заголовка
 const TCHAR szWindowClass[MAX_LOADSTRING] = _T("Migal Mykola");            // имя класса главного окна
 const TCHAR text[MAX_LOADSTRING] = _T("TUT SHOTO NAPISANO");
+
+
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -26,8 +30,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	
-	asdas
-		asdasd
+	
 	// TODO: Разместите код здесь.
 
 	// Инициализация глобальных строк
@@ -70,7 +73,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
-	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_NOCLOSE;
+	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS ;// CS_NOCLOSE
 	wcex.lpfnWndProc = WndProc;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
@@ -104,8 +107,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		WS_OVERLAPPEDWINDOW,
 		0,
 		0,
-		500,
-		200,
+		1800,
+		1000,
 		NULL,
 		NULL,
 		hInstance,
@@ -132,10 +135,32 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - отправить сообщение о выходе и вернуться
 //
 //
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+
+LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	HDC hdc;              // индекс контекста устройства
+	PAINTSTRUCT ps;       // структура для рисования
+	static TEXTMETRIC tm; // структура для записи метрик
+						  // шрифта
+	
 	switch (message)
 	{
+	case WM_CREATE :
+	{
+		hdc = GetDC(hWnd);
+
+		// контекст отображения
+		GetTextMetrics(hdc, &tm);
+		
+		
+		ReleaseDC(hWnd, hdc);
+		return 0;
+	}
+	break;
+	case WM_RBUTTONDBLCLK:
+	{
+		DestroyWindow(hWnd);
+	}
 	case WM_COMMAND:
 	{
 		int wmId = LOWORD(wParam);
@@ -154,13 +179,53 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	case WM_PAINT:
-	{
+	{ 
+		int i = tm.tmHeight;          //напевно середнє значення величини символу рядка
+		int j = tm.tmInternalLeading; //напевно величина простору над символом для спеціальних знаків
+		int x = SM_CXDOUBLECLK;       //Ширина прямокутника дабл клик
+		int y = SM_CYDOUBLECLK;       //Висота прямокутника дабл клик
+		int v = ASPECTX;              //відносна ширина точки
+
+		wchar_t xstr[100]; //Ширина прямокутника дабл клик
+		wchar_t ystr[100]; //Висота прямокутника дабл клик
+		wchar_t istr[100]; //напевно середнє значення величини символу рядка
+		wchar_t jstr[100]; //напевно величина простору над символом для спеціальних знаків
+		wchar_t vstr[100]; //відносна ширина точки
+
+		
+		
+		_itow_s(x, xstr, 10);
+		_itow_s(y, ystr, 10);
+		_itow_s(i, istr, 10);
+		_itow_s(j, jstr, 10);
+		_itow_s(v, vstr, 10);
+
+		
+		
+		
+		
 		PAINTSTRUCT ps;
 		RECT rt;
 		HDC hdc = BeginPaint(hWnd, &ps);
+		
+		
+		
 		// TODO: Добавьте сюда любой код прорисовки, использующий HDC...
-		GetClientRect(hWnd, &rt);
-		DrawText(hdc, text, -1, &rt, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+		GetClientRect(hWnd, &rt);		
+		TextOut(hdc, 19, 0, L"Ширина прямокутника дабл клик", 30);
+		TextOut(hdc, 19, 18, L"Висота прямокутника дабл клик" , 30);
+		TextOut(hdc, 19, 36, L"напевно середнє значення величини символу рядка" , 48);
+		TextOut(hdc, 19, 54, L"напевно величина простору над символом для спеціальних знаків" , 62);
+		TextOut(hdc, 19, 72, L"відносна ширина точки", 22);
+		
+
+		TextOut(hdc, 0, 0 , xstr, sizeof(*xstr));
+		TextOut(hdc, 0, 18, ystr, sizeof(*ystr));
+		TextOut(hdc, 0, 36, istr, sizeof(*istr));
+		TextOut(hdc, 0, 54, jstr, sizeof(*jstr));
+		TextOut(hdc, 0, 72, vstr, sizeof(*vstr));
+		
+		
 		EndPaint(hWnd, &ps);
 	}
 	break;
