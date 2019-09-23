@@ -27,6 +27,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	
 	asdas
+		asdasd
 	// TODO: Разместите код здесь.
 
 	// Инициализация глобальных строк
