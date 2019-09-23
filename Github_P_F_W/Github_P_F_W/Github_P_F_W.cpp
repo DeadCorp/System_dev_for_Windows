@@ -138,6 +138,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	static HBITMAP hBmp;
+	static BITMAP  bmp;
 	HDC hdc;              // индекс контекста устройства
 	PAINTSTRUCT ps;       // структура для рисования
 	static TEXTMETRIC tm; // структура для записи метрик
@@ -180,29 +182,29 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	break;
 	case WM_PAINT:
 	{ 
-		int i = tm.tmHeight;          //напевно середнє значення величини символу рядка
-		int j = tm.tmInternalLeading; //напевно величина простору над символом для спеціальних знаків
-		int x = SM_CXDOUBLECLK;       //Ширина прямокутника дабл клик
-		int y = SM_CYDOUBLECLK;       //Висота прямокутника дабл клик
-		int v = ASPECTX;              //відносна ширина точки
+		//int i = tm.tmHeight;          //напевно середнє значення величини символу рядка
+		//int j = tm.tmInternalLeading; //напевно величина простору над символом для спеціальних знаків
+		//int x = SM_CXDOUBLECLK;       //Ширина прямокутника дабл клик
+		//int y = SM_CYDOUBLECLK;       //Висота прямокутника дабл клик
+		//int v = ASPECTX;              //відносна ширина точки
 
-		wchar_t xstr[100]; //Ширина прямокутника дабл клик
-		wchar_t ystr[100]; //Висота прямокутника дабл клик
-		wchar_t istr[100]; //напевно середнє значення величини символу рядка
-		wchar_t jstr[100]; //напевно величина простору над символом для спеціальних знаків
-		wchar_t vstr[100]; //відносна ширина точки
+		//wchar_t xstr[100]; //Ширина прямокутника дабл клик
+		//wchar_t ystr[100]; //Висота прямокутника дабл клик
+		//wchar_t istr[100]; //напевно середнє значення величини символу рядка
+		//wchar_t jstr[100]; //напевно величина простору над символом для спеціальних знаків
+		//wchar_t vstr[100]; //відносна ширина точки
 
+		//
+		//
+		//_itow_s(x, xstr, 10);
+		//_itow_s(y, ystr, 10);
+		//_itow_s(i, istr, 10);
+		//_itow_s(j, jstr, 10);
+		//_itow_s(v, vstr, 10);
+		 
 		
-		
-		_itow_s(x, xstr, 10);
-		_itow_s(y, ystr, 10);
-		_itow_s(i, istr, 10);
-		_itow_s(j, jstr, 10);
-		_itow_s(v, vstr, 10);
+		//hBmp = LoadBitmap(GetModuleHandle(0), MAKEINTRESOURCE(IDB_BITMAP1));
 
-		
-		
-		
 		
 		PAINTSTRUCT ps;
 		RECT rt;
@@ -212,7 +214,14 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		
 		// TODO: Добавьте сюда любой код прорисовки, использующий HDC...
 		GetClientRect(hWnd, &rt);		
-		TextOut(hdc, 19, 0, L"Ширина прямокутника дабл клик", 30);
+		
+		
+
+
+
+
+
+		/*TextOut(hdc, 19, 0, L"Ширина прямокутника дабл клик", 30);
 		TextOut(hdc, 19, 18, L"Висота прямокутника дабл клик" , 30);
 		TextOut(hdc, 19, 36, L"напевно середнє значення величини символу рядка" , 48);
 		TextOut(hdc, 19, 54, L"напевно величина простору над символом для спеціальних знаків" , 62);
@@ -223,7 +232,10 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		TextOut(hdc, 0, 18, ystr, sizeof(*ystr));
 		TextOut(hdc, 0, 36, istr, sizeof(*istr));
 		TextOut(hdc, 0, 54, jstr, sizeof(*jstr));
-		TextOut(hdc, 0, 72, vstr, sizeof(*vstr));
+		TextOut(hdc, 0, 72, vstr, sizeof(*vstr));*/
+
+
+
 		
 		
 		EndPaint(hWnd, &ps);
@@ -231,6 +243,9 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
+		
+
+
 		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
