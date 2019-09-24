@@ -6,8 +6,8 @@
 #include "resource.h"
 
 
-
-
+#define x_co 0
+#define IDB_Button1 1
 #define MAX_LOADSTRING 100
 
 // Глобальные переменные:
@@ -80,7 +80,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.hInstance = hInstance;
 	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
 	wcex.hCursor = LoadCursor(nullptr, IDC_HELP);
-	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 6);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + x_co);
 	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_GITHUBPFW);
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
@@ -101,7 +101,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance; // Сохранить маркер экземпляра в глобальной переменной
-
+	HWND hButton1;
 	HWND hWnd = CreateWindowW(szWindowClass,
 		szTitle,
 		WS_OVERLAPPEDWINDOW,
@@ -122,7 +122,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
+	
+
 	return TRUE;
+	
 }
 
 //
@@ -141,16 +144,91 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static int cxClient, cyClient;
 	static HBITMAP hBmp;
 	static BITMAP  bmp;
+	static HBRUSH bkbrush = NULL;
+	RECT rc;
 	HDC hdc;              // индекс контекста устройства
 	PAINTSTRUCT ps;       // структура для рисования
 	static TEXTMETRIC tm; // структура для записи метрик
 						  // шрифта
-	
+	static POINT pt;//для захвата курсора
 	switch (message)
 	{
+	case WM_KEYDOWN:
+	{
+		// Получаем текущие экранные
+		// координаты курсора мыши 
+		GetCursorPos(&pt);
+
+		// Преобразуем экранные координаты
+		// в оконные координаты
+		ScreenToClient(hWnd, &pt);
+
+		// Для клавиш позиционирования текстового
+		// курсора изменяем соответствующим образом
+		// координаты курсора мыши
+		switch (wParam)
+		{
+		case VK_DOWN:  // вниз
+		{
+			pt.y += 20;
+			break;
+		}
+		case VK_UP:    // вверх
+		{
+			pt.y -= 20;
+			break;
+		}
+		case VK_LEFT:  // влево
+		{
+			pt.x -= 20;
+			break;
+		}
+		case VK_RIGHT: // вправо
+		{
+			pt.x += 20;
+			break;
+		}
+		case VK_RETURN :
+		{
+			
+			SendMessage(hWnd, WM_LBUTTONDOWN, MK_LBUTTON, lParam);
+			//SendMessage(hWnd, WM_LBUTTONDOWN, wParam, lParam);
+			 
+			break;
+		}
+		// Для всех остальных клавиш
+		// ничего не делаем
+		default:
+		{
+			return 0;
+		}
+		}
+
+		// Получаем координаты внутренней
+		// области окна
+		GetClientRect(hWnd, &rc);
+
+		// Вычисляем новые координаты курсора мыши
+		// таким образом, чтобы курсор не выходил
+		// за пределы окна
+		pt.x = max(min(pt.x, rc.right), rc.left);
+		pt.y = max(min(pt.y, rc.bottom), rc.top);
+
+		// Преобразуем оконные координаты в экранные
+		ClientToScreen(hWnd, &pt);
+
+		// Устанавливаем курсор мыши
+		// в новую позицию
+		SetCursorPos(pt.x, pt.y);
+
+		return 0;
+	}
 	case WM_CREATE :
 	{
+		
 		hdc = GetDC(hWnd);
+		
+		
 		hBmp = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP1));
 		GetObject(hBmp, sizeof(BITMAP), &bmp);
 		// контекст отображения
@@ -164,6 +242,32 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_RBUTTONDBLCLK:
 	{
 		DestroyWindow(hWnd);
+	}
+	case WM_LBUTTONDOWN :
+	{
+		if (wParam == MK_LBUTTON)
+		{
+			COLORREF bkcolor = RGB(rand() % 256, rand() % 256, rand() % 256);
+			if (bkbrush)
+				DeleteObject(bkbrush);
+			bkbrush = CreateSolidBrush(bkcolor);
+			SetClassLongPtr(hWnd, GCL_HBRBACKGROUND, (LONG)bkbrush);
+			InvalidateRect(hWnd, NULL, TRUE);
+	
+			PAINTSTRUCT ps;
+			RECT rc;
+			HDC hdc = BeginPaint(hWnd, &ps);
+			GetClientRect(hWnd, &rc);
+			SetDCBrushColor(hdc, bkcolor);
+			FillRect(hdc, &rc, (HBRUSH)GetStockObject(DC_BRUSH));
+
+			//or use ps.rcPaint to repaint only the section which requires update
+			//FillRect(hdc, &ps.rcPaint, (HBRUSH)GetStockObject(DC_BRUSH));
+
+			EndPaint(hWnd, &ps);
+	
+
+		}
 	}
 	case WM_COMMAND:
 	{
@@ -205,7 +309,7 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//_itow_s(v, vstr, 10);
 		 
 		
-		HBITMAP bmLogo1, bmLogo2;
+		/*HBITMAP bmLogo1, bmLogo2;
 		
 
 		
@@ -255,7 +359,7 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		
 		
-		EndPaint(hWnd, &ps);
+		//EndPaint(hWnd, &ps);
 	}
 	break;
 	case WM_SIZE:
