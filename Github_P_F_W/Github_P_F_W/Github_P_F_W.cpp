@@ -3,6 +3,7 @@
 
 #include "framework.h"
 #include "Github_P_F_W.h"
+#include "resource.h"
 
 
 
@@ -14,7 +15,6 @@ HINSTANCE hInst;                                // текущий экземпл
 const TCHAR szTitle[MAX_LOADSTRING] = _T("Lab_1");                  // Текст строки заголовка
 const TCHAR szWindowClass[MAX_LOADSTRING] = _T("Migal Mykola");            // имя класса главного окна
 const TCHAR text[MAX_LOADSTRING] = _T("TUT SHOTO NAPISANO");
-
 
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -138,6 +138,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	static int cxClient, cyClient;
 	static HBITMAP hBmp;
 	static BITMAP  bmp;
 	HDC hdc;              // индекс контекста устройства
@@ -150,7 +151,8 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE :
 	{
 		hdc = GetDC(hWnd);
-
+		hBmp = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP1));
+		GetObject(hBmp, sizeof(BITMAP), &bmp);
 		// контекст отображения
 		GetTextMetrics(hdc, &tm);
 		
@@ -203,20 +205,35 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//_itow_s(v, vstr, 10);
 		 
 		
-		//hBmp = LoadBitmap(GetModuleHandle(0), MAKEINTRESOURCE(IDB_BITMAP1));
+		HBITMAP bmLogo1, bmLogo2;
+		
 
 		
 		PAINTSTRUCT ps;
 		RECT rt;
-		HDC hdc = BeginPaint(hWnd, &ps);
+		HGDIOBJ hOld;
+		HDC hMemDC,hdc = BeginPaint(hWnd, &ps);
 		
 		
 		
 		// TODO: Добавьте сюда любой код прорисовки, использующий HDC...
 		GetClientRect(hWnd, &rt);		
 		
-		
+		hMemDC = CreateCompatibleDC(hdc);
+		hOld = SelectObject(hMemDC, hBmp);
 
+		StretchBlt(
+			hdc,
+			0, 0,
+			cxClient, cyClient,
+			hMemDC,
+			0, 0,
+			bmp.bmWidth, bmp.bmHeight,
+			SRCCOPY);
+
+		SelectObject(hMemDC, hOld);
+		DeleteDC(hMemDC);
+		
 
 
 
@@ -241,7 +258,12 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 	}
 	break;
+	case WM_SIZE:
+		cxClient = LOWORD(lParam);
+		cyClient = HIWORD(lParam);
+		break;
 	case WM_DESTROY:
+		DeleteObject(hBmp);
 		PostQuitMessage(0);
 		
 

@@ -163,6 +163,7 @@
     <ResourceCompile Include="Github_P_F_W.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\..\..\845x490.bmp" />
     <Image Include="bitmap1.bmp" />
     <Image Include="Github_P_F_W.ico" />
     <Image Include="small.ico" />
