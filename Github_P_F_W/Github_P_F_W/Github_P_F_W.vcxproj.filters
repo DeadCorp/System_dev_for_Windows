@@ -45,5 +45,11 @@
     <Image Include="Github_P_F_W.ico">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+    <Image Include="bitmap1.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\..\..\845x490.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
   </ItemGroup>
 </Project>
