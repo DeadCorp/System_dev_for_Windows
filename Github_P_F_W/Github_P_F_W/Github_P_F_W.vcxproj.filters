@@ -48,8 +48,31 @@
     <Image Include="bitmap1.bmp">
       <Filter>Файлы ресурсов</Filter>
     </Image>
-    <Image Include="..\..\..\..\..\..\..\845x490.bmp">
+    <Image Include="..\..\..\..\..\Desktop\help.bmp">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+    <Image Include="..\..\..\..\..\Desktop\CUR1.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="..\..\..\..\..\Desktop\CUR2.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="help.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="CUR1.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="CUR2.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cursor1.cur">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="cursor2.cur">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
   </ItemGroup>
 </Project>

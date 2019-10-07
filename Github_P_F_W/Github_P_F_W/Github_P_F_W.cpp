@@ -15,23 +15,28 @@ HINSTANCE hInst;                                // текущий экземпл
 const TCHAR szTitle[MAX_LOADSTRING] = _T("Lab_1");                  // Текст строки заголовка
 const TCHAR szWindowClass[MAX_LOADSTRING] = _T("Migal Mykola");            // имя класса главного окна
 const TCHAR text[MAX_LOADSTRING] = _T("TUT SHOTO NAPISANO");
+HCURSOR CUR1,CUR2,CUR0;
+
+
+int i = 0;
 
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    cur(HWND, UINT, WPARAM, LPARAM);
+
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPTSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
+
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	
-	
-	// TODO: Разместите код здесь.
 
 	// Инициализация глобальных строк
 
@@ -50,6 +55,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// Цикл основного сообщения:
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
+		
 		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
 		{
 			TranslateMessage(&msg);
@@ -79,7 +85,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
 	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
-	wcex.hCursor = LoadCursor(nullptr, IDC_HELP);
+	wcex.hCursor = LoadCursor(hInst,IDC_HELP);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + x_co);
 	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_GITHUBPFW);
 	wcex.lpszClassName = szWindowClass;
@@ -101,7 +107,8 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance; // Сохранить маркер экземпляра в глобальной переменной
-	HWND hButton1;
+	
+
 	HWND hWnd = CreateWindowW(szWindowClass,
 		szTitle,
 		WS_OVERLAPPEDWINDOW,
@@ -141,6 +148,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	
 	static int cxClient, cyClient;
 	static HBITMAP hBmp;
 	static BITMAP  bmp;
@@ -196,6 +204,20 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			 
 			break;
 		}
+		case VK_SPACE:
+		{
+			i = 1;
+			break;
+		}
+		case VK_SHIFT:
+		{
+			i = 2;
+			break;
+		}
+		case VK_ESCAPE: {
+			i = 0;
+			break;
+		}
 		// Для всех остальных клавиш
 		// ничего не делаем
 		default:
@@ -229,6 +251,10 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		hdc = GetDC(hWnd);
 		
 		
+			CUR1 = LoadCursor(hInst, MAKEINTRESOURCE(IDC_CURSOR1)),
+			CUR2 = LoadCursor(hInst, MAKEINTRESOURCE(IDC_CURSOR2)),
+			CUR0 = LoadCursor(hInst, IDC_HELP);
+		
 		hBmp = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP1));
 		GetObject(hBmp, sizeof(BITMAP), &bmp);
 		// контекст отображения
@@ -238,14 +264,14 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		ReleaseDC(hWnd, hdc);
 		return 0;
 	}
-	break;
-	case WM_RBUTTONDBLCLK:
-	{
-		DestroyWindow(hWnd);
-	}
+	
+	
+	
+
+	
 	case WM_LBUTTONDOWN :
 	{
-		if (wParam == MK_LBUTTON)
+		/*if (wParam == MK_LBUTTON)
 		{
 			COLORREF bkcolor = RGB(rand() % 256, rand() % 256, rand() % 256);
 			if (bkbrush)
@@ -267,17 +293,46 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			EndPaint(hWnd, &ps);
 	
 
-		}
+		}*/
 	}
+	case WM_SETCURSOR:
+	{
+		if (i == 1) {
+			SetCursor(CUR1);
+			break;
+		}
+		if (i == 2) {
+			SetCursor(CUR2);
+			break;
+		}
+		if (i == 0) {
+			SetCursor(CUR0);
+			
+		}
+		
+
+
+
+	}
+	
 	case WM_COMMAND:
 	{
 		int wmId = LOWORD(wParam);
 		// Разобрать выбор в меню:
 		switch (wmId)
 		{
+		
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 			break;
+		case IDM_CUR:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, About);			
+			break;
+		case IDM_AUTOR:
+		{
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG2), hWnd, About);
+			break;
+		}
 		case IDM_EXIT:
 			DestroyWindow(hWnd);
 			break;
@@ -382,19 +437,50 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 // Обработчик сообщений для окна "О программе".
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	
+	
 	UNREFERENCED_PARAMETER(lParam);
 	switch (message)
 	{
 	case WM_INITDIALOG:
 		return (INT_PTR)TRUE;
 
-	case WM_COMMAND:
+	
+	
+	case WM_COMMAND: {
+		int wmId = LOWORD(wParam);
+		switch (wmId)
+		{
+		case IDC_BUTTON1: {
+			i = 0;
+			break;
+
+		}
+		case IDC_BUTTON2: {
+			i = 1;
+			break;
+
+		}
+		case IDC_BUTTON3: {
+			i = 2;
+			break;
+
+		}
+		
+			break;
+		}
+		
+	
+		
 		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{
 			EndDialog(hDlg, LOWORD(wParam));
 			return (INT_PTR)TRUE;
 		}
-		break;
+		break; }
+	
 	}
 	return (INT_PTR)FALSE;
 }
+
+

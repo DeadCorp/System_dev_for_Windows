@@ -163,10 +163,19 @@
     <ResourceCompile Include="Github_P_F_W.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\..\..\845x490.bmp" />
+    <Image Include="..\..\..\..\..\Desktop\CUR1.bmp" />
+    <Image Include="..\..\..\..\..\Desktop\CUR2.bmp" />
+    <Image Include="..\..\..\..\..\Desktop\help.bmp" />
     <Image Include="bitmap1.bmp" />
+    <Image Include="CUR1.bmp" />
+    <Image Include="CUR2.bmp" />
     <Image Include="Github_P_F_W.ico" />
+    <Image Include="help.bmp" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cursor1.cur" />
+    <None Include="cursor2.cur" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
