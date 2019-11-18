@@ -163,9 +163,7 @@
     <ResourceCompile Include="Github_P_F_W.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\Desktop\CUR1.bmp" />
     <Image Include="..\..\..\..\..\Desktop\CUR2.bmp" />
-    <Image Include="..\..\..\..\..\Desktop\help.bmp" />
     <Image Include="bitmap1.bmp" />
     <Image Include="CUR1.bmp" />
     <Image Include="CUR2.bmp" />

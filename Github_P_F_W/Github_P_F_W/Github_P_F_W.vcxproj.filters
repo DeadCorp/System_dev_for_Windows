@@ -48,12 +48,6 @@
     <Image Include="bitmap1.bmp">
       <Filter>Файлы ресурсов</Filter>
     </Image>
-    <Image Include="..\..\..\..\..\Desktop\help.bmp">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
-    <Image Include="..\..\..\..\..\Desktop\CUR1.bmp">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
     <Image Include="..\..\..\..\..\Desktop\CUR2.bmp">
       <Filter>Файлы ресурсов</Filter>
     </Image>
