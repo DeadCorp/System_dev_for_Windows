@@ -251,7 +251,7 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (bkbrush)
 				DeleteObject(bkbrush);
 			bkbrush = CreateSolidBrush(bkcolor);
-			SetClassLongPtr(hWnd, GCL_HBRBACKGROUND, (LONG)bkbrush);
+			SetClassLongPtr(hWnd, /*GCL_HBRBACKGROUND*/NULL, (LONG)bkbrush);
 			InvalidateRect(hWnd, NULL, TRUE);
 	
 			PAINTSTRUCT ps;
