@@ -4,21 +4,33 @@
 #include "framework.h"
 #include "Github_P_F_W.h"
 #include "resource.h"
+#include "Windows.h"
+#include "iostream"
+#include "commctrl.h"
+#include "stdlib.h"
+#include "commdlg.h"
+#include <string>
+using namespace std;
 
 
 #define x_co 0
 #define IDB_Button1 1
-#define MAX_LOADSTRING 100
+#define MAX_LOADSTRING 1000000
 
 // Глобальные переменные:
 HINSTANCE hInst;                                // текущий экземпляр
-const TCHAR szTitle[MAX_LOADSTRING] = _T("Lab_1");                  // Текст строки заголовка
+const TCHAR szTitle[MAX_LOADSTRING] = _T("Lab_5");                  // Текст строки заголовка
 const TCHAR szWindowClass[MAX_LOADSTRING] = _T("Migal Mykola");            // имя класса главного окна
 const TCHAR text[MAX_LOADSTRING] = _T("TUT SHOTO NAPISANO");
 HCURSOR CUR1,CUR2,CUR0;
-
-
+PROCESS_INFORMATION processInfo;
+//OPENFILENAME ofn;
+//TCHAR szFile[260];
 int i = 0;
+
+int sec = 0;
+wchar_t secx[MAX_LOADSTRING];
+wchar_t secy[MAX_LOADSTRING];
 
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -112,10 +124,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	HWND hWnd = CreateWindowW(szWindowClass,
 		szTitle,
 		WS_OVERLAPPEDWINDOW,
-		0,
-		0,
-		1800,
-		1000,
+		700,
+		400,
+		365,
+		300,
 		NULL,
 		NULL,
 		hInstance,
@@ -150,9 +162,13 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	
 	static int cxClient, cyClient;
+	
 	static HBITMAP hBmp;
 	static BITMAP  bmp;
 	static HBRUSH bkbrush = NULL;
+	static HWND hBtn, hBtn2;// дескриптор кнопки
+	HANDLE hf;
+	HFILE ht;
 	RECT rc;
 	HDC hdc;              // индекс контекста устройства
 	PAINTSTRUCT ps;       // структура для рисования
@@ -247,7 +263,14 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	case WM_CREATE :
 	{
-		
+		hBtn = CreateWindow(_T("button"), _T( "Вибрати файл для запуску"),
+			WS_CHILD | WS_VISIBLE | WS_BORDER,
+			10, 30, 325, 30, hWnd, 0, hInst, NULL);
+		ShowWindow(hBtn, SW_SHOWNORMAL);
+		hBtn2 = CreateWindow(_T("button"), _T("Iнформація про запущені програмою процеси"),
+			WS_CHILD | WS_VISIBLE | WS_BORDER,
+			10, 90, 325, 30, hWnd, 0, hInst, NULL);
+		ShowWindow(hBtn, SW_SHOWNORMAL);
 		hdc = GetDC(hWnd);
 		
 		
@@ -266,14 +289,11 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	
 	
-	
-
-	
 	case WM_LBUTTONDOWN :
 	{
 		/*if (wParam == MK_LBUTTON)
 		{
-			COLORREF bkcolor = RGB(rand() % 256, rand() % 256, rand() % 256);
+			/*COLORREF bkcolor = RGB(rand() % 256, rand() % 256, rand() % 256);
 			if (bkbrush)
 				DeleteObject(bkbrush);
 			bkbrush = CreateSolidBrush(bkcolor);
@@ -291,9 +311,10 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			//FillRect(hdc, &ps.rcPaint, (HBRUSH)GetStockObject(DC_BRUSH));
 
 			EndPaint(hWnd, &ps);
-	
+	*/
+			
 
-		}*/
+		//}
 	}
 	case WM_SETCURSOR:
 	{
@@ -317,6 +338,58 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	
 	case WM_COMMAND:
 	{
+		
+		if (lParam == (LPARAM)hBtn)    // если нажали на кнопку
+		{
+			OPENFILENAME ofn = { sizeof ofn };
+			wchar_t file[1024];
+			file[0] = '\0';
+			ofn.lpstrFile = file;
+			ofn.lpstrFileTitle = ofn.lpstrFile;
+			ofn.nMaxFile = 1024;
+			ofn.Flags = OFN_ALLOWMULTISELECT | OFN_EXPLORER;
+			if (GetOpenFileName(&ofn) == TRUE)
+			{
+				
+				
+				
+				STARTUPINFO si;
+				PROCESS_INFORMATION pi;
+				ZeroMemory(&si, sizeof(si));
+				si.cb = sizeof(si);
+				ZeroMemory(&pi, sizeof(pi));
+				
+				if (CreateProcess(NULL, ofn.lpstrFile,
+					NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi) == TRUE)
+				{
+						lstrcat(secx, L"//////////////////////////////////////////////////////////////////////////");
+						lstrcat(secx, L"\nІм'я файлу : ");
+						lstrcat(secx, ofn.lpstrFileTitle);
+						lstrcat(secx, L"\nАйді процесу : ");
+						sec = pi.dwProcessId;
+						_itow_s(sec, secy, 10);	
+						lstrcat(secx, secy);
+						sec = pi.dwThreadId;
+						_itow_s(sec, secy, 10);
+						lstrcat(secx, L"\nАйді потоку : ");
+						lstrcat(secx, secy);
+						lstrcat(secx, L"\n");
+						CloseHandle(pi.hProcess);
+						CloseHandle(pi.hThread);
+				}
+				
+
+			}
+		}
+		if (lParam == (LPARAM)hBtn2)
+		{
+			
+
+			MessageBox(hWnd, secx , L"Інформація про процес                                        ", MB_OK);
+
+		}
+		
+		
 		int wmId = LOWORD(wParam);
 		// Разобрать выбор в меню:
 		switch (wmId)
@@ -364,7 +437,7 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//_itow_s(v, vstr, 10);
 		 
 		
-		/*HBITMAP bmLogo1, bmLogo2;
+		HBITMAP bmLogo1, bmLogo2;
 		
 
 		
@@ -381,30 +454,30 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		hMemDC = CreateCompatibleDC(hdc);
 		hOld = SelectObject(hMemDC, hBmp);
 
-		StretchBlt(
+		/*StretchBlt(
 			hdc,
 			0, 0,
 			cxClient, cyClient,
 			hMemDC,
 			0, 0,
 			bmp.bmWidth, bmp.bmHeight,
-			SRCCOPY);
+			SRCCOPY);*/
 
 		SelectObject(hMemDC, hOld);
 		DeleteDC(hMemDC);
 		
-
-
-
+		
+		
+		
 
 		/*TextOut(hdc, 19, 0, L"Ширина прямокутника дабл клик", 30);
 		TextOut(hdc, 19, 18, L"Висота прямокутника дабл клик" , 30);
 		TextOut(hdc, 19, 36, L"напевно середнє значення величини символу рядка" , 48);
 		TextOut(hdc, 19, 54, L"напевно величина простору над символом для спеціальних знаків" , 62);
-		TextOut(hdc, 19, 72, L"відносна ширина точки", 22);
+		TextOut(hdc, 19, 72, L"відносна ширина точки", 22);*/
 		
 
-		TextOut(hdc, 0, 0 , xstr, sizeof(*xstr));
+		/*TextOut(hdc, 0, 0 , xstr, sizeof(*xstr));
 		TextOut(hdc, 0, 18, ystr, sizeof(*ystr));
 		TextOut(hdc, 0, 36, istr, sizeof(*istr));
 		TextOut(hdc, 0, 54, jstr, sizeof(*jstr));
@@ -414,7 +487,7 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		
 		
-		//EndPaint(hWnd, &ps);
+		EndPaint(hWnd, &ps);
 	}
 	break;
 	case WM_SIZE:
@@ -481,6 +554,8 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	
 	}
 	return (INT_PTR)FALSE;
+
+	
 }
 
 
