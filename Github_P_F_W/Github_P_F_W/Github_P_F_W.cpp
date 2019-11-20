@@ -10,16 +10,26 @@
 #include "stdlib.h"
 #include "commdlg.h"
 #include <string>
-using namespace std;
+
 
 
 #define x_co 0
 #define IDB_Button1 1
 #define MAX_LOADSTRING 1000000
+#define ID_FIRSTCHILD	100
+#define ID_SECONDCHILD	101
+#define ID_THIRDCHILD	102
+#define ID_FO 103
+#define ID_FA 104
+#define ID_SI 105
+#define ID_SE 106
+#define ID_AT 107
+
+
 
 // Глобальные переменные:
 HINSTANCE hInst;                                // текущий экземпляр
-const TCHAR szTitle[MAX_LOADSTRING] = _T("Lab_5");                  // Текст строки заголовка
+const TCHAR szTitle[MAX_LOADSTRING] = _T("Lab_7");                  // Текст строки заголовка
 const TCHAR szWindowClass[MAX_LOADSTRING] = _T("Migal Mykola");            // имя класса главного окна
 const TCHAR text[MAX_LOADSTRING] = _T("TUT SHOTO NAPISANO");
 HCURSOR CUR1,CUR2,CUR0;
@@ -27,6 +37,8 @@ PROCESS_INFORMATION processInfo;
 //OPENFILENAME ofn;
 //TCHAR szFile[260];
 int i = 0;
+int j = 0;
+
 
 int sec = 0;
 wchar_t secx[MAX_LOADSTRING];
@@ -38,6 +50,8 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    cur(HWND, UINT, WPARAM, LPARAM);
+
+LRESULT CALLBACK child_WndProc(HWND, UINT, WPARAM, LPARAM);
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -88,6 +102,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
 	WNDCLASSEXW wcex;
+	WNDCLASSEXW child_wc;
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
@@ -103,7 +118,18 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-	return RegisterClassExW(&wcex);
+	child_wc.lpszClassName = L"child";
+	child_wc.lpfnWndProc = (WNDPROC)child_WndProc;
+	child_wc.style = CS_HREDRAW | CS_VREDRAW;
+	child_wc.hInstance = hInstance;
+	child_wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	child_wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	child_wc.hbrBackground = CreateSolidBrush(RGB(0, 255, 0));
+	child_wc.lpszMenuName = NULL;
+	child_wc.cbClsExtra = 0;
+	child_wc.cbWndExtra = 0;
+	
+	return RegisterClassExW(&wcex) and RegisterClassExW(&child_wc);
 }
 
 //
@@ -124,10 +150,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	HWND hWnd = CreateWindowW(szWindowClass,
 		szTitle,
 		WS_OVERLAPPEDWINDOW,
-		700,
-		400,
-		365,
-		300,
+		0,
+		0,
+		1920,
+		1080,
 		NULL,
 		NULL,
 		hInstance,
@@ -161,12 +187,12 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	
-	static int cxClient, cyClient;
-	
+static int cxClient, cyClient;
+
 	static HBITMAP hBmp;
 	static BITMAP  bmp;
 	static HBRUSH bkbrush = NULL;
-	static HWND hBtn, hBtn2;// дескриптор кнопки
+	static HWND hBtn, hBtn2, hBtn3; // дескриптор кнопки
 	HANDLE hf;
 	HFILE ht;
 	RECT rc;
@@ -175,6 +201,7 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static TEXTMETRIC tm; // структура для записи метрик
 						  // шрифта
 	static POINT pt;//для захвата курсора
+	
 	switch (message)
 	{
 	case WM_KEYDOWN:
@@ -263,14 +290,18 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	case WM_CREATE :
 	{
-		hBtn = CreateWindow(_T("button"), _T( "Вибрати файл для запуску"),
+		/*hBtn = CreateWindow(_T("button"), _T( "Вибрати файл для запуску"),
 			WS_CHILD | WS_VISIBLE | WS_BORDER,
 			10, 30, 325, 30, hWnd, 0, hInst, NULL);
 		ShowWindow(hBtn, SW_SHOWNORMAL);
 		hBtn2 = CreateWindow(_T("button"), _T("Iнформація про запущені програмою процеси"),
 			WS_CHILD | WS_VISIBLE | WS_BORDER,
 			10, 90, 325, 30, hWnd, 0, hInst, NULL);
-		ShowWindow(hBtn, SW_SHOWNORMAL);
+		ShowWindow(hBtn2, SW_SHOWNORMAL);*/
+		hBtn3 = CreateWindow(_T("button"), _T("Відкрити нове вікно"),
+			WS_CHILD | WS_VISIBLE | WS_BORDER,
+			10, 30, 325, 30, hWnd, 0, hInst, NULL);
+		ShowWindow(hBtn3, SW_SHOWNORMAL);
 		hdc = GetDC(hWnd);
 		
 		
@@ -338,8 +369,19 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	
 	case WM_COMMAND:
 	{
-		
-		if (lParam == (LPARAM)hBtn)    // если нажали на кнопку
+		if (lParam == (LPARAM)hBtn3)
+		{
+			HWND child_hWnd1 = CreateWindow(szWindowClass, L"Child1", WS_OVERLAPPEDWINDOW | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 0,100, 200, 200, hWnd, NULL, hInst, NULL);
+			// как-то так.
+			
+			ShowWindow(child_hWnd1, SW_NORMAL);
+			UpdateWindow(child_hWnd1);
+			
+			break;
+			
+			
+		}
+		/*if (lParam == (LPARAM)hBtn)    // если нажали на кнопку
 		{
 			OPENFILENAME ofn = { sizeof ofn };
 			wchar_t file[1024];
@@ -387,7 +429,7 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			MessageBox(hWnd, secx , L"Інформація про процес                                        ", MB_OK);
 
-		}
+		}*/
 		
 		
 		int wmId = LOWORD(wParam);
@@ -506,7 +548,55 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return 0;
 }
+LRESULT CALLBACK child_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	PAINTSTRUCT ps;
+	HDC hdc;
+	switch (msg)
+	{
 
+	case WM_PAINT:
+
+	{
+		// в оконную процедуру уже передается декскриптор того окна, для которого эта процедура вызвана, хранить их где-то ещё нет смысла
+		// и точки с запятой не хватало
+								 //LONG whatToDraw=GetWindowLongPtr(child_hWnd1, GWLP_USERDATA)
+		
+
+
+
+		hdc = BeginPaint(hWnd, &ps);
+
+		
+		
+		
+		}// switch(whatToDraw)
+
+		EndPaint(hWnd, &ps);
+		break;
+
+
+	}
+	
+	switch (msg)
+	{
+
+
+		// я не хочу, чтобы вся программа завершалась при закрытии дочернего окна
+				//case WM_DESTROY:
+				//{
+				//                                 PostQuitMessage(0);
+				//}; break;
+
+	case WM_MOVE:
+	{
+		InvalidateRect(hWnd, NULL, TRUE); UpdateWindow(hWnd);
+	}break;
+
+	default: return DefWindowProc(hWnd, msg, wParam, lParam); //реализует поведение по умолчанию типичного окна верхнего уровня.
+	}
+	return 0l;
+}
 // Обработчик сообщений для окна "О программе".
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
