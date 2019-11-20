@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Github_P_F_W", "Github_P_F_W\Github_P_F_W.vcxproj", "{854D0591-9199-485E-AD17-269A85304F11}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dll1", "Dll1\Dll1.vcxproj", "{3FABAD2E-DB85-4527-9557-4E23861B1797}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{854D0591-9199-485E-AD17-269A85304F11}.Release|x64.Build.0 = Release|x64
 		{854D0591-9199-485E-AD17-269A85304F11}.Release|x86.ActiveCfg = Release|Win32
 		{854D0591-9199-485E-AD17-269A85304F11}.Release|x86.Build.0 = Release|Win32
+		{3FABAD2E-DB85-4527-9557-4E23861B1797}.Debug|x64.ActiveCfg = Debug|x64
+		{3FABAD2E-DB85-4527-9557-4E23861B1797}.Debug|x64.Build.0 = Debug|x64
+		{3FABAD2E-DB85-4527-9557-4E23861B1797}.Debug|x86.ActiveCfg = Debug|Win32
+		{3FABAD2E-DB85-4527-9557-4E23861B1797}.Debug|x86.Build.0 = Debug|Win32
+		{3FABAD2E-DB85-4527-9557-4E23861B1797}.Release|x64.ActiveCfg = Release|x64
+		{3FABAD2E-DB85-4527-9557-4E23861B1797}.Release|x64.Build.0 = Release|x64
+		{3FABAD2E-DB85-4527-9557-4E23861B1797}.Release|x86.ActiveCfg = Release|Win32
+		{3FABAD2E-DB85-4527-9557-4E23861B1797}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

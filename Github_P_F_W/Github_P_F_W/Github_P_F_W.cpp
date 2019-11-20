@@ -37,8 +37,8 @@ PROCESS_INFORMATION processInfo;
 //OPENFILENAME ofn;
 //TCHAR szFile[260];
 int i = 0;
-int j = 0;
-
+int j = 0, j3 = 0, j4 = 0;
+int x = 0, y = 0, d = 300, v = 30;
 
 int sec = 0;
 wchar_t secx[MAX_LOADSTRING];
@@ -290,17 +290,18 @@ static int cxClient, cyClient;
 	}
 	case WM_CREATE :
 	{
-		/*hBtn = CreateWindow(_T("button"), _T( "Вибрати файл для запуску"),
+		
+		hBtn = CreateWindow(_T("button"), _T( "Намалювати прямокутник "),
 			WS_CHILD | WS_VISIBLE | WS_BORDER,
-			10, 30, 325, 30, hWnd, 0, hInst, NULL);
+			x+=30,y+=30, d,v, hWnd, 0, hInst, NULL);
 		ShowWindow(hBtn, SW_SHOWNORMAL);
-		hBtn2 = CreateWindow(_T("button"), _T("Iнформація про запущені програмою процеси"),
+		hBtn2 = CreateWindow(_T("button"), _T("Намалювати круглий прямокутник"),
 			WS_CHILD | WS_VISIBLE | WS_BORDER,
-			10, 90, 325, 30, hWnd, 0, hInst, NULL);
-		ShowWindow(hBtn2, SW_SHOWNORMAL);*/
-		hBtn3 = CreateWindow(_T("button"), _T("Відкрити нове вікно"),
+			x+=330, y, d, v, hWnd, 0, hInst, NULL);
+		ShowWindow(hBtn2, SW_SHOWNORMAL);
+		hBtn3 = CreateWindow(_T("button"), _T("Намалювати еліпс"),
 			WS_CHILD | WS_VISIBLE | WS_BORDER,
-			10, 30, 325, 30, hWnd, 0, hInst, NULL);
+			x+=330, y, d, v, hWnd, 0, hInst, NULL);
 		ShowWindow(hBtn3, SW_SHOWNORMAL);
 		hdc = GetDC(hWnd);
 		
@@ -371,16 +372,20 @@ static int cxClient, cyClient;
 	{
 		if (lParam == (LPARAM)hBtn3)
 		{
-			HWND child_hWnd1 = CreateWindow(szWindowClass, L"Child1", WS_OVERLAPPEDWINDOW | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 0,100, 200, 200, hWnd, NULL, hInst, NULL);
-			// как-то так.
-			
-			ShowWindow(child_hWnd1, SW_NORMAL);
-			UpdateWindow(child_hWnd1);
-			
-			break;
-			
-			
+			j = 1;
+			InvalidateRect(hWnd, NULL, TRUE);
 		}
+		if (lParam == (LPARAM)hBtn2)
+		{
+			j4 = 4;
+			InvalidateRect(hWnd, NULL, TRUE);
+		}
+		if (lParam == (LPARAM)hBtn)
+		{
+			j3 = 3;
+			InvalidateRect(hWnd, NULL, TRUE);
+		}
+
 		/*if (lParam == (LPARAM)hBtn)    // если нажали на кнопку
 		{
 			OPENFILENAME ofn = { sizeof ofn };
@@ -486,30 +491,55 @@ static int cxClient, cyClient;
 		PAINTSTRUCT ps;
 		RECT rt;
 		HGDIOBJ hOld;
-		HDC hMemDC,hdc = BeginPaint(hWnd, &ps);
+		HDC hdc = BeginPaint(hWnd, &ps);
+
 		
+			
+			
 		
+		//Ellipse(hdc, 100, 100, 200, 200);
 		
 		// TODO: Добавьте сюда любой код прорисовки, использующий HDC...
-		GetClientRect(hWnd, &rt);		
+		GetClientRect(hWnd, &rt);
+		typedef UINT(*MUFUNC)(HDC,int,int,int,int);
 		
-		hMemDC = CreateCompatibleDC(hdc);
-		hOld = SelectObject(hMemDC, hBmp);
+		
+		if (j == 1) {
+			HMODULE hLib = LoadLibrary(L"DLL1.dll");
+			if (hLib == NULL) {
+				MessageBox(hWnd, L"errrrrrroooooorrrr", L"error", NULL);
+				break;
 
-		/*StretchBlt(
-			hdc,
-			0, 0,
-			cxClient, cyClient,
-			hMemDC,
-			0, 0,
-			bmp.bmWidth, bmp.bmHeight,
-			SRCCOPY);*/
+			}
+			x = 670; y = 100; d = 940; v = 200;
+			MUFUNC el = (MUFUNC)GetProcAddress(hLib, "elipsR");
+			el(hdc,x,y,d,v);
+		}
 
-		SelectObject(hMemDC, hOld);
-		DeleteDC(hMemDC);
-		
-		
-		
+		if (j4 == 4) {
+			typedef UINT(*MUFUNC)(HDC, int, int, int, int, int, int);
+			HMODULE hLib = LoadLibrary(L"DLL1.dll");
+			if (hLib == NULL) {
+				MessageBox(hWnd, L"errrrrrroooooorrrr", L"error", NULL);
+				break;
+
+			}
+			MUFUNC krpr = (MUFUNC)GetProcAddress(hLib, "kvadratnokutR");
+			x = 370; y = 100; d = 570; v = 200;
+			krpr(hdc,x,y,d,v,30,50);
+		}
+
+		if (j3 == 3) {
+			HMODULE hLib = LoadLibrary(L"DLL1.dll");
+			if (hLib == NULL) {
+				MessageBox(hWnd, L"errrrrrroooooorrrr", L"error", NULL);
+				break;
+
+			}
+			MUFUNC pr = (MUFUNC)GetProcAddress(hLib, "kvadratR");
+			
+			pr(hdc,100,100,200,180);
+		}
 		
 
 		/*TextOut(hdc, 19, 0, L"Ширина прямокутника дабл клик", 30);
