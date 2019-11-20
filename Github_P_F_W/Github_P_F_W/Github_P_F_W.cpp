@@ -20,7 +20,10 @@
 #define DRAW_TRIANGLE 1
 #define DRAW_ELLIPSE 2
 #define DRAW_STAR 3
-
+int i = 0;
+wchar_t x[100];
+wchar_t xc[100];
+int cx = -320, cy = 60;
 
 // --- Описание функции главного окна
 LRESULT CALLBACK main_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);//(СALLBACK - паскалевское соглашение о способе передаче параметров)
@@ -33,6 +36,7 @@ HINSTANCE  hInst;
 TCHAR main_ClassName[] = L"MainWindows";      // Название класса окна
 TCHAR child_ClassName[] = L"ChildWindows";
 TCHAR szTitle[] = L"ORIGINAL NAME ";
+TCHAR szTitlecopy[] = L"ORIGINAL NAME ";
 
 TCHAR main_app_name[] = L"LAB 7";      // Название класса окна
 TCHAR popup_app_name[] = L"POPUPWINDOW";
@@ -118,43 +122,49 @@ LRESULT CALLBACK main_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg)
 	{
 	case WM_CREATE:
-		hButton = CreateWindow(L"button", L"Відкрити нове вікно", WS_CHILD | WS_VISIBLE  | BS_PUSHBUTTON, 12, 12, 180, 40, hWnd, (HMENU)ID_BUTTON1, hInst, NULL);
-		//hButton1 = CreateWindow(L"button", NULL, WS_CHILD | WS_VISIBLE | BS_BITMAP, 400, 162, 200, 150, hWnd, (HMENU)ID_BUTTON2, hInst, NULL);
-		//hButton2 = CreateWindow(L"button", NULL, WS_CHILD | WS_VISIBLE | BS_BITMAP, 400, 312, 200, 150, hWnd, (HMENU)ID_BUTTON3, hInst, NULL);
+		hButton = CreateWindow(L"button", L"Відкрити нове вікно", WS_CHILD | WS_VISIBLE  , 12, 12, 180, 40, hWnd, (HMENU)ID_BUTTON1, hInst, NULL);
+		hButton1 = CreateWindow(L"button", L"Каскадно", WS_CHILD | WS_VISIBLE , 202, 12, 180	, 40, hWnd, (HMENU)ID_BUTTON2, hInst, NULL);
+		hButton2 = CreateWindow(L"button", L"Показати всі", WS_CHILD | WS_VISIBLE , 394, 12, 180, 40, hWnd, (HMENU)ID_BUTTON3, hInst, NULL);
 
 	case WM_COMMAND:
 		wmId = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
 		if (LOWORD(wParam) == ID_BUTTON1)
 		{
-			HWND child_hWnd1 = CreateWindow(child_ClassName,szTitle, WS_OVERLAPPEDWINDOW | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 20, 30, 300, 300, hWnd, (HMENU)ID_CHILD1, hInst, NULL);
+			if (i > 7) break;
+			
+			if (i == 4) 
+			{
+				cy = 360;
+				cx = -320;
+			}
+					cx += 340;
+			lstrcpy(szTitlecopy ,szTitle);
+			i++;
+			_itow_s(i, x, 10);
+			lstrcat(szTitlecopy, x);
+			HWND child_hWnd1 = CreateWindow(child_ClassName,szTitlecopy, WS_OVERLAPPEDWINDOW | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, cx,cy, 300, 300, hWnd, (HMENU)ID_CHILD1, hInst, NULL);
 			// как-то так.
 			//SetWindowLong(child_hWnd1, GWL_USERDATA, DRAW_TRIANGLE);
 			ShowWindow(child_hWnd1, SW_NORMAL);
 			UpdateWindow(child_hWnd1);
 			
+			lstrcpy(x, xc);
+			
+
 			// не совсем так.
 			//SetWindowLongPtr(child_hWnd1, GWLP_USERDATA, (LONG)child_WndProc);
 			break;
 		}
 		if (LOWORD(wParam) == ID_BUTTON2)
 		{
-			// лишняя единичка?
-			//HWND child_hWnd2 = CreateWindow(child_ClassName1, _T("Child2"), WS_OVERLAPPEDWINDOW | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 700, 200, 400, 400, hWnd, (HMENU)ID_CHILD2, hInst, NULL);
-			HWND child_hWnd2 = CreateWindow(child_ClassName, _T("Child2"), WS_OVERLAPPEDWINDOW | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 700, 200, 400, 400, hWnd, (HMENU)ID_CHILD2, hInst, NULL);
-			// этот параметр нужно задать каждому окошку при создании
-			//SetWindowLong(child_hWnd2, GWL_USERDATA, DRAW_ELLIPSE);
-			ShowWindow(child_hWnd2, SW_NORMAL);
-			UpdateWindow(child_hWnd2);
+			CascadeWindows(hWnd, NULL, NULL, 1, NULL);			
 			break;
 		}
+		
 		if (LOWORD(wParam) == ID_BUTTON3)
 		{
-			HWND child_hWnd3 = CreateWindow(child_ClassName, _T("Child3"), WS_OVERLAPPEDWINDOW | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, 400, 300, 400, 400, hWnd, NULL, hInst, NULL);
-			// ...каждому.
-			//SetWindowLong(child_hWnd3, GWL_USERDATA, DRAW_STAR);
-			ShowWindow(child_hWnd3, SW_NORMAL);
-			UpdateWindow(child_hWnd3);
+			TileWindows(hWnd, NULL, NULL, 8, NULL);
 			break;
 		}
 		// чо это было?..
