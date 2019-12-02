@@ -22,9 +22,14 @@
 #define IDB_BITMAP4                     141
 #define IDB_BITMAP5                     142
 #define IDD_DIALOG2                     143
+#define IDD_DIALOG3                     145
+#define IDD_DIALOG4                     146
 #define IDC_BUTTON1                     1011
 #define IDC_BUTTON2                     1012
 #define IDC_BUTTON3                     1013
+#define IDC_EDIT1                       1015
+#define IDC_EDIT2                       1016
+#define IDC_EDIT3                       1016
 #define ID_32771                        32771
 #define I                               32772
 #define ID_32772                        32772
@@ -33,6 +38,8 @@
 #define IDM_CUR                         32774
 #define IDM_AUTOR                       32775
 #define ID_ACCELERATOR32783             32783
+#define IDM_STEP                        32784
+#define IDM_FAC                         32785
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -40,9 +47,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        145
-#define _APS_NEXT_COMMAND_VALUE         32784
-#define _APS_NEXT_CONTROL_VALUE         1015
+#define _APS_NEXT_RESOURCE_VALUE        147
+#define _APS_NEXT_COMMAND_VALUE         32786
+#define _APS_NEXT_CONTROL_VALUE         1017
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

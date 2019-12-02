@@ -164,6 +164,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\..\Desktop\CUR2.bmp" />
+    <Image Include="..\..\..\System_dev_for_Windows\Github_P_F_W\Github_P_F_W\CUR1.bmp" />
+    <Image Include="..\..\..\System_dev_for_Windows\Github_P_F_W\Github_P_F_W\CUR2.bmp" />
+    <Image Include="..\..\..\System_dev_for_Windows\Github_P_F_W\Github_P_F_W\help.bmp" />
     <Image Include="bitmap1.bmp" />
     <Image Include="CUR1.bmp" />
     <Image Include="CUR2.bmp" />
@@ -172,6 +175,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\System_dev_for_Windows\Github_P_F_W\Github_P_F_W\cursor1.cur" />
     <None Include="cursor1.cur" />
     <None Include="cursor2.cur" />
   </ItemGroup>

@@ -60,12 +60,24 @@
     <Image Include="CUR2.bmp">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+    <Image Include="..\..\..\System_dev_for_Windows\Github_P_F_W\Github_P_F_W\help.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="..\..\..\System_dev_for_Windows\Github_P_F_W\Github_P_F_W\CUR1.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="..\..\..\System_dev_for_Windows\Github_P_F_W\Github_P_F_W\CUR2.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="cursor1.cur">
       <Filter>Файлы ресурсов</Filter>
     </None>
     <None Include="cursor2.cur">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="..\..\..\System_dev_for_Windows\Github_P_F_W\Github_P_F_W\cursor1.cur">
       <Filter>Файлы ресурсов</Filter>
     </None>
   </ItemGroup>

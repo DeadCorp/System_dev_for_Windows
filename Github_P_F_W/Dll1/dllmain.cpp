@@ -1,6 +1,7 @@
 ﻿// dllmain.cpp : Определяет точку входа для приложения DLL.
 #include "pch.h"
 #include "Windows.h"
+#include "Math.h"
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -17,16 +18,18 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     }
     return TRUE;
 }
-extern "C" _declspec(dllexport) UINT elipsR(HDC hdc,int x,int y,int z,int v)
+extern "C" _declspec(dllexport) UINT stepin(int x,int y)
 {
-	return Ellipse(hdc, x,y,z,v);
+	return pow(x,y);
 }
-extern "C" _declspec(dllexport) UINT kvadratR(HDC hdc, int x, int y, int z, int v)
+extern "C" _declspec(dllexport) UINT factorial(int x,int y = 0)
 {
-	return Rectangle(hdc, x, y, z, v);
+	if (x < 0) // если пользователь ввел отрицательное число
+		return 0; // возвращаем ноль
+	if (x == 0) // если пользователь ввел ноль,
+		return 1; // возвращаем факториал от нуля - не удивляетесь, но это 1 =)
+	else // Во всех остальных случаях
+		return x * factorial(x - 1); // делаем рекурсию.
 }
-extern "C" _declspec(dllexport) UINT kvadratnokutR(HDC hdc, int x, int y, int z, int v,int s,int f)
-{
-	return RoundRect(hdc, x, y, z, v,s,f);
-}
+
 

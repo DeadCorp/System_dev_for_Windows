@@ -38,12 +38,10 @@ PROCESS_INFORMATION processInfo;
 //TCHAR szFile[260];
 int i = 0;
 int j = 0, j3 = 0, j4 = 0;
-int x = 0, y = 0, d = 300, v = 30;
+int xx = 0, yy = 0, cc = 0;
 
-int sec = 0;
-wchar_t secx[MAX_LOADSTRING];
-wchar_t secy[MAX_LOADSTRING];
 
+wchar_t s[MAX_LOADSTRING] = _T("");
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -206,147 +204,26 @@ static int cxClient, cyClient;
 	{
 	case WM_KEYDOWN:
 	{
-		// Получаем текущие экранные
-		// координаты курсора мыши 
-		GetCursorPos(&pt);
-
-		// Преобразуем экранные координаты
-		// в оконные координаты
-		ScreenToClient(hWnd, &pt);
-
-		// Для клавиш позиционирования текстового
-		// курсора изменяем соответствующим образом
-		// координаты курсора мыши
-		switch (wParam)
-		{
-		case VK_DOWN:  // вниз
-		{
-			pt.y += 20;
-			break;
-		}
-		case VK_UP:    // вверх
-		{
-			pt.y -= 20;
-			break;
-		}
-		case VK_LEFT:  // влево
-		{
-			pt.x -= 20;
-			break;
-		}
-		case VK_RIGHT: // вправо
-		{
-			pt.x += 20;
-			break;
-		}
-		case VK_RETURN :
-		{
-			
-			SendMessage(hWnd, WM_LBUTTONDOWN, MK_LBUTTON, lParam);
-			//SendMessage(hWnd, WM_LBUTTONDOWN, wParam, lParam);
-			 
-			break;
-		}
-		case VK_SPACE:
-		{
-			i = 1;
-			break;
-		}
-		case VK_SHIFT:
-		{
-			i = 2;
-			break;
-		}
-		case VK_ESCAPE: {
-			i = 0;
-			break;
-		}
-		// Для всех остальных клавиш
-		// ничего не делаем
-		default:
-		{
-			return 0;
-		}
-		}
-
-		// Получаем координаты внутренней
-		// области окна
-		GetClientRect(hWnd, &rc);
-
-		// Вычисляем новые координаты курсора мыши
-		// таким образом, чтобы курсор не выходил
-		// за пределы окна
-		pt.x = max(min(pt.x, rc.right), rc.left);
-		pt.y = max(min(pt.y, rc.bottom), rc.top);
-
-		// Преобразуем оконные координаты в экранные
-		ClientToScreen(hWnd, &pt);
-
-		// Устанавливаем курсор мыши
-		// в новую позицию
-		SetCursorPos(pt.x, pt.y);
-
+		
 		return 0;
 	}
 	case WM_CREATE :
 	{
 		
-		hBtn = CreateWindow(_T("button"), _T( "Намалювати прямокутник "),
-			WS_CHILD | WS_VISIBLE | WS_BORDER,
-			x+=30,y+=30, d,v, hWnd, 0, hInst, NULL);
-		ShowWindow(hBtn, SW_SHOWNORMAL);
-		hBtn2 = CreateWindow(_T("button"), _T("Намалювати круглий прямокутник"),
-			WS_CHILD | WS_VISIBLE | WS_BORDER,
-			x+=330, y, d, v, hWnd, 0, hInst, NULL);
-		ShowWindow(hBtn2, SW_SHOWNORMAL);
-		hBtn3 = CreateWindow(_T("button"), _T("Намалювати еліпс"),
-			WS_CHILD | WS_VISIBLE | WS_BORDER,
-			x+=330, y, d, v, hWnd, 0, hInst, NULL);
-		ShowWindow(hBtn3, SW_SHOWNORMAL);
-		hdc = GetDC(hWnd);
-		
-		
-			CUR1 = LoadCursor(hInst, MAKEINTRESOURCE(IDC_CURSOR1)),
-			CUR2 = LoadCursor(hInst, MAKEINTRESOURCE(IDC_CURSOR2)),
-			CUR0 = LoadCursor(hInst, IDC_HELP);
-		
 		hBmp = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP1));
 		GetObject(hBmp, sizeof(BITMAP), &bmp);
 		// контекст отображения
-		GetTextMetrics(hdc, &tm);
 		
 		
-		ReleaseDC(hWnd, hdc);
+		
+		
 		return 0;
 	}
 	
 	
 	case WM_LBUTTONDOWN :
 	{
-		/*if (wParam == MK_LBUTTON)
-		{
-			/*COLORREF bkcolor = RGB(rand() % 256, rand() % 256, rand() % 256);
-			if (bkbrush)
-				DeleteObject(bkbrush);
-			bkbrush = CreateSolidBrush(bkcolor);
-			SetClassLongPtr(hWnd, GCL_HBRBACKGROUND, (LONG)bkbrush);
-			InvalidateRect(hWnd, NULL, TRUE);
-	
-			PAINTSTRUCT ps;
-			RECT rc;
-			HDC hdc = BeginPaint(hWnd, &ps);
-			GetClientRect(hWnd, &rc);
-			SetDCBrushColor(hdc, bkcolor);
-			FillRect(hdc, &rc, (HBRUSH)GetStockObject(DC_BRUSH));
-
-			//or use ps.rcPaint to repaint only the section which requires update
-			//FillRect(hdc, &ps.rcPaint, (HBRUSH)GetStockObject(DC_BRUSH));
-
-			EndPaint(hWnd, &ps);
-	*/
-			
-
-		//}
+		InvalidateRect(hWnd , NULL, TRUE);
 	}
 	case WM_SETCURSOR:
 	{
@@ -386,55 +263,7 @@ static int cxClient, cyClient;
 			InvalidateRect(hWnd, NULL, TRUE);
 		}
 
-		/*if (lParam == (LPARAM)hBtn)    // если нажали на кнопку
-		{
-			OPENFILENAME ofn = { sizeof ofn };
-			wchar_t file[1024];
-			file[0] = '\0';
-			ofn.lpstrFile = file;
-			ofn.lpstrFileTitle = ofn.lpstrFile;
-			ofn.nMaxFile = 1024;
-			ofn.Flags = OFN_ALLOWMULTISELECT | OFN_EXPLORER;
-			if (GetOpenFileName(&ofn) == TRUE)
-			{
-				
-				
-				
-				STARTUPINFO si;
-				PROCESS_INFORMATION pi;
-				ZeroMemory(&si, sizeof(si));
-				si.cb = sizeof(si);
-				ZeroMemory(&pi, sizeof(pi));
-				
-				if (CreateProcess(NULL, ofn.lpstrFile,
-					NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi) == TRUE)
-				{
-						lstrcat(secx, L"//////////////////////////////////////////////////////////////////////////");
-						lstrcat(secx, L"\nІм'я файлу : ");
-						lstrcat(secx, ofn.lpstrFileTitle);
-						lstrcat(secx, L"\nАйді процесу : ");
-						sec = pi.dwProcessId;
-						_itow_s(sec, secy, 10);	
-						lstrcat(secx, secy);
-						sec = pi.dwThreadId;
-						_itow_s(sec, secy, 10);
-						lstrcat(secx, L"\nАйді потоку : ");
-						lstrcat(secx, secy);
-						lstrcat(secx, L"\n");
-						CloseHandle(pi.hProcess);
-						CloseHandle(pi.hThread);
-				}
-				
-
-			}
-		}
-		if (lParam == (LPARAM)hBtn2)
-		{
-			
-
-			MessageBox(hWnd, secx , L"Інформація про процес                                        ", MB_OK);
-
-		}*/
+		
 		
 		
 		int wmId = LOWORD(wParam);
@@ -445,8 +274,11 @@ static int cxClient, cyClient;
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 			break;
-		case IDM_CUR:
-			DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, About);			
+		case IDM_STEP:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG3), hWnd, About);			
+			break;
+		case IDM_FAC:
+			DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG4), hWnd, About);
 			break;
 		case IDM_AUTOR:
 		{
@@ -463,26 +295,7 @@ static int cxClient, cyClient;
 	break;
 	case WM_PAINT:
 	{ 
-		//int i = tm.tmHeight;          //напевно середнє значення величини символу рядка
-		//int j = tm.tmInternalLeading; //напевно величина простору над символом для спеціальних знаків
-		//int x = SM_CXDOUBLECLK;       //Ширина прямокутника дабл клик
-		//int y = SM_CYDOUBLECLK;       //Висота прямокутника дабл клик
-		//int v = ASPECTX;              //відносна ширина точки
-
-		//wchar_t xstr[100]; //Ширина прямокутника дабл клик
-		//wchar_t ystr[100]; //Висота прямокутника дабл клик
-		//wchar_t istr[100]; //напевно середнє значення величини символу рядка
-		//wchar_t jstr[100]; //напевно величина простору над символом для спеціальних знаків
-		//wchar_t vstr[100]; //відносна ширина точки
-
-		//
-		//
-		//_itow_s(x, xstr, 10);
-		//_itow_s(y, ystr, 10);
-		//_itow_s(i, istr, 10);
-		//_itow_s(j, jstr, 10);
-		//_itow_s(v, vstr, 10);
-		 
+		
 		
 		HBITMAP bmLogo1, bmLogo2;
 		
@@ -501,47 +314,30 @@ static int cxClient, cyClient;
 		
 		// TODO: Добавьте сюда любой код прорисовки, использующий HDC...
 		GetClientRect(hWnd, &rt);
-		typedef UINT(*MUFUNC)(HDC,int,int,int,int);
+		typedef UINT(*MUFUNC)(int x,int y);
 		
 		
-		if (j == 1) {
+		
 			HMODULE hLib = LoadLibrary(L"DLL1.dll");
 			if (hLib == NULL) {
 				MessageBox(hWnd, L"errrrrrroooooorrrr", L"error", NULL);
 				break;
 
 			}
-			x = 670; y = 100; d = 940; v = 200;
-			MUFUNC el = (MUFUNC)GetProcAddress(hLib, "elipsR");
-			el(hdc,x,y,d,v);
-		}
 
-		if (j4 == 4) {
-			typedef UINT(*MUFUNC)(HDC, int, int, int, int, int, int);
-			HMODULE hLib = LoadLibrary(L"DLL1.dll");
-			if (hLib == NULL) {
-				MessageBox(hWnd, L"errrrrrroooooorrrr", L"error", NULL);
-				break;
-
-			}
-			MUFUNC krpr = (MUFUNC)GetProcAddress(hLib, "kvadratnokutR");
-			x = 370; y = 100; d = 570; v = 200;
-			krpr(hdc,x,y,d,v,30,50);
-		}
-
-		if (j3 == 3) {
-			HMODULE hLib = LoadLibrary(L"DLL1.dll");
-			if (hLib == NULL) {
-				MessageBox(hWnd, L"errrrrrroooooorrrr", L"error", NULL);
-				break;
-
-			}
-			MUFUNC pr = (MUFUNC)GetProcAddress(hLib, "kvadratR");
-			
-			pr(hdc,100,100,200,180);
-		}
+			MUFUNC step = (MUFUNC)GetProcAddress(hLib, "stepin");
+			MUFUNC fac = (MUFUNC)GetProcAddress(hLib, "factorial");
 		
-
+			xx = IDC_EDIT1;
+			yy = IDC_EDIT1;
+			cc = IDC_EDIT3;
+			j3 = step(6, 5);
+			j4 = fac(5,0);
+			lstrcat(s, _T("stepin 5 chisla 6 = "));
+			_itow_s(j3, s, 10);
+			lstrcat(s, _T("   FACTORIAL   chisla 5 = "));
+			_itow_s(j4, s, 10);
+			TextOut(hdc, 19, 0, s, wcslen(s));
 		/*TextOut(hdc, 19, 0, L"Ширина прямокутника дабл клик", 30);
 		TextOut(hdc, 19, 18, L"Висота прямокутника дабл клик" , 30);
 		TextOut(hdc, 19, 36, L"напевно середнє значення величини символу рядка" , 48);
@@ -667,6 +463,8 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		
 		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{
+			
+			
 			EndDialog(hDlg, LOWORD(wParam));
 			return (INT_PTR)TRUE;
 		}
