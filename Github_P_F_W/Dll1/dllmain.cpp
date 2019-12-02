@@ -20,6 +20,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 }
 extern "C" _declspec(dllexport) UINT stepin(int x,int y)
 {
+	
 	return pow(x,y);
 }
 extern "C" _declspec(dllexport) UINT factorial(int x,int y = 0)
