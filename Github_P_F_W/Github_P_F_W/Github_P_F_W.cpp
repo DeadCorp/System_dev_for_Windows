@@ -202,11 +202,22 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		
 		
-		chislo += 1;
+
+		
+		chislo = 1;
 		InvalidateRect(hWnd, NULL, TRUE);
+
+
+
+
+
+		
 		
 		
 
+	}
+	case WM_RBUTTONDOWN: {
+		InvalidateRect(hWnd, NULL, TRUE);
 	}
 	
 	
@@ -245,11 +256,11 @@ LRESULT CALLBACK  WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		ScreenToClient(hWnd, &pt);
 		//ClientToScreen(hWnd, &pt);
 
-			
-		
-		_itow_s(chislo, chislo_s, 10);
-	TextOut(hdc, pt.x, pt.y, chislo_s , wcslen(chislo_s));
-		
+		if (chislo == 1) {
+			Rectangle(hdc, pt.x, pt.y, pt.x + 150, pt.y + 100);
+			chislo = 0;
+		}
+
 
 
 
